@@ -1,0 +1,16 @@
+{
+  "model": "mlx-community/Qwen2.5-7B-Instruct-4bit",
+  "raw_dataset": "raw.jsonl",
+  "data_dir": "data",
+  "system_prompt": "You are a concise, helpful assistant.",
+  "adapter_path": "adapters",
+  "iters": 600,
+  "batch_size": 4,
+  "learning_rate": 1e-5,
+  "fused_dir": "fused",
+  "llama_cpp_path": "../llama.cpp",
+  "outtype": "q8_0",
+  "gguf_path": "model.gguf",
+  "ollama_model_name": "my-qwen",
+  "modelfile_path": "Modelfile"
+}
