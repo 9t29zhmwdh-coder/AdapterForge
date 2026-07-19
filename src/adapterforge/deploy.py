@@ -5,7 +5,9 @@ from pathlib import Path
 from .shell import run
 
 
-def write_modelfile(gguf_path: Path, modelfile_path: Path, system_prompt: str | None = None) -> None:
+def write_modelfile(
+    gguf_path: Path, modelfile_path: Path, system_prompt: str | None = None
+) -> None:
     lines = [f"FROM {gguf_path}"]
     if system_prompt:
         lines.append(f'SYSTEM """{system_prompt}"""')

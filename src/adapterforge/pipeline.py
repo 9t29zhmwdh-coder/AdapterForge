@@ -38,7 +38,9 @@ def run_pipeline(config_path: Path) -> None:
     )
 
     fused_dir = _resolve_path(base_dir, config["fused_dir"])
-    merge_adapter(model=config["model"], adapter_path=adapter_path, output_dir=fused_dir)
+    merge_adapter(
+        model=config["model"], adapter_path=adapter_path, output_dir=fused_dir
+    )
 
     gguf_path = _resolve_path(base_dir, config["gguf_path"])
     export_to_gguf(
@@ -51,6 +53,8 @@ def run_pipeline(config_path: Path) -> None:
     deploy_to_ollama(
         gguf_path=gguf_path,
         model_name=config["ollama_model_name"],
-        modelfile_path=_resolve_path(base_dir, config.get("modelfile_path", "Modelfile")),
+        modelfile_path=_resolve_path(
+            base_dir, config.get("modelfile_path", "Modelfile")
+        ),
         system_prompt=config.get("system_prompt"),
     )
