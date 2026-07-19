@@ -19,7 +19,9 @@ def _load_records(input_path: Path) -> list[dict]:
             try:
                 records.append(json.loads(line))
             except json.JSONDecodeError as exc:
-                raise DatasetError(f"{input_path}:{line_number}: invalid JSON ({exc})") from exc
+                raise DatasetError(
+                    f"{input_path}:{line_number}: invalid JSON ({exc})"
+                ) from exc
     if not records:
         raise DatasetError(f"{input_path} contains no records")
     return records
@@ -63,8 +65,14 @@ def prepare_dataset(
 
     Returns the number of examples written per split.
     """
-    if not 0 < train_ratio < 1 or not 0 <= valid_ratio < 1 or train_ratio + valid_ratio >= 1:
-        raise DatasetError("train_ratio + valid_ratio must be below 1, both must be positive")
+    if (
+        not 0 < train_ratio < 1
+        or not 0 <= valid_ratio < 1
+        or train_ratio + valid_ratio >= 1
+    ):
+        raise DatasetError(
+            "train_ratio + valid_ratio must be below 1, both must be positive"
+        )
 
     records = _load_records(input_path)
     examples = [_to_chat_example(r, system_prompt) for r in records]

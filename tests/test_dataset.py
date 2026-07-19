@@ -27,7 +27,9 @@ def test_prepare_dataset_splits_prompt_completion_pairs(tmp_path: Path) -> None:
 
 def test_prepare_dataset_adds_system_prompt(tmp_path: Path) -> None:
     raw = tmp_path / "raw.jsonl"
-    _write_raw(raw, [{"instruction": f"hi{i}", "response": f"hello{i}"} for i in range(5)])
+    _write_raw(
+        raw, [{"instruction": f"hi{i}", "response": f"hello{i}"} for i in range(5)]
+    )
 
     prepare_dataset(raw, tmp_path / "out", system_prompt="be terse")
 
@@ -38,12 +40,17 @@ def test_prepare_dataset_adds_system_prompt(tmp_path: Path) -> None:
 
 def test_prepare_dataset_passes_through_chat_messages(tmp_path: Path) -> None:
     raw = tmp_path / "raw.jsonl"
-    messages = [{"role": "user", "content": "hi"}, {"role": "assistant", "content": "hey"}]
+    messages = [
+        {"role": "user", "content": "hi"},
+        {"role": "assistant", "content": "hey"},
+    ]
     _write_raw(raw, [{"messages": messages} for _ in range(5)])
 
     prepare_dataset(raw, tmp_path / "out")
 
-    example = json.loads((tmp_path / "out" / "train.jsonl").read_text().strip().splitlines()[0])
+    example = json.loads(
+        (tmp_path / "out" / "train.jsonl").read_text().strip().splitlines()[0]
+    )
     assert example["messages"] == messages
 
 

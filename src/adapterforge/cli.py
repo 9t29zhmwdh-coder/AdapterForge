@@ -14,7 +14,9 @@ from .train import run_training
 
 
 def _add_dataset_command(subparsers: argparse._SubParsersAction) -> None:
-    parser = subparsers.add_parser("dataset", help="split a raw JSONL file into train/valid/test")
+    parser = subparsers.add_parser(
+        "dataset", help="split a raw JSONL file into train/valid/test"
+    )
     parser.add_argument("--input", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--system-prompt", default=None)
@@ -23,7 +25,9 @@ def _add_dataset_command(subparsers: argparse._SubParsersAction) -> None:
 
 
 def _add_train_command(subparsers: argparse._SubParsersAction) -> None:
-    parser = subparsers.add_parser("train", help="run QLoRA fine-tuning via mlx_lm.lora")
+    parser = subparsers.add_parser(
+        "train", help="run QLoRA fine-tuning via mlx_lm.lora"
+    )
     parser.add_argument("--model", required=True)
     parser.add_argument("--data", required=True, type=Path)
     parser.add_argument("--adapter-path", required=True, type=Path)
@@ -33,14 +37,18 @@ def _add_train_command(subparsers: argparse._SubParsersAction) -> None:
 
 
 def _add_merge_command(subparsers: argparse._SubParsersAction) -> None:
-    parser = subparsers.add_parser("merge", help="fuse a trained adapter into the base model")
+    parser = subparsers.add_parser(
+        "merge", help="fuse a trained adapter into the base model"
+    )
     parser.add_argument("--model", required=True)
     parser.add_argument("--adapter-path", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
 
 
 def _add_export_command(subparsers: argparse._SubParsersAction) -> None:
-    parser = subparsers.add_parser("export", help="convert a merged model to GGUF via llama.cpp")
+    parser = subparsers.add_parser(
+        "export", help="convert a merged model to GGUF via llama.cpp"
+    )
     parser.add_argument("--model-dir", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--llama-cpp-path", required=True, type=Path)
@@ -48,7 +56,9 @@ def _add_export_command(subparsers: argparse._SubParsersAction) -> None:
 
 
 def _add_deploy_command(subparsers: argparse._SubParsersAction) -> None:
-    parser = subparsers.add_parser("deploy", help="register a GGUF with the local Ollama daemon")
+    parser = subparsers.add_parser(
+        "deploy", help="register a GGUF with the local Ollama daemon"
+    )
     parser.add_argument("--gguf", required=True, type=Path)
     parser.add_argument("--name", required=True)
     parser.add_argument("--modelfile", type=Path, default=Path("Modelfile"))
@@ -56,7 +66,9 @@ def _add_deploy_command(subparsers: argparse._SubParsersAction) -> None:
 
 
 def _add_pipeline_command(subparsers: argparse._SubParsersAction) -> None:
-    parser = subparsers.add_parser("pipeline", help="run the full chain from a JSON config file")
+    parser = subparsers.add_parser(
+        "pipeline", help="run the full chain from a JSON config file"
+    )
     parser.add_argument("--config", required=True, type=Path)
 
 
@@ -95,7 +107,9 @@ def _dispatch(args: argparse.Namespace) -> None:
             learning_rate=args.learning_rate,
         )
     elif args.command == "merge":
-        merge_adapter(model=args.model, adapter_path=args.adapter_path, output_dir=args.output)
+        merge_adapter(
+            model=args.model, adapter_path=args.adapter_path, output_dir=args.output
+        )
     elif args.command == "export":
         export_to_gguf(
             model_dir=args.model_dir,

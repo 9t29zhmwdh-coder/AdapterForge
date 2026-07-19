@@ -10,4 +10,6 @@ class StageError(Exception):
 def run(command: list[str], stage: str) -> None:
     result = subprocess.run(command, check=False)
     if result.returncode != 0:
-        raise StageError(f"{stage} failed (exit code {result.returncode}): {' '.join(command)}")
+        raise StageError(
+            f"{stage} failed (exit code {result.returncode}): {' '.join(command)}"
+        )
