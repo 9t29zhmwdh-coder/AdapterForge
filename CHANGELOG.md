@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning follows [Semantic Versioning](https://semver.org/).
 
+## [0.1.3] - 2026-07-20
+
+### Changed
+
+- OpenSSF Best Practices Badge questionnaire filled out and linked in the README (in-progress, 99%).
+- Split the Best Practices/Scorecard/CI badges from the tech-stack badges onto their own README line.
+- Split the README's security/CI badges onto their own line, separate from the platform/tech/AI badges (they were rendering as a single merged line).
+
 ## [0.1.2] - 2026-07-20
 
 ### Added
