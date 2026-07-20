@@ -79,4 +79,4 @@ Das Config-Format zeigt [`docs/pipeline.example.json`](docs/pipeline.example.jso
 
 ---
 
-**Autor:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Early Release · v0.1.1 · **Lizenz:** MIT
+**Autor:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Early Release · v0.1.2 · **Lizenz:** MIT
