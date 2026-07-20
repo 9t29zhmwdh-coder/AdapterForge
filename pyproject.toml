@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "adapterforge"
-version = "0.1.1"
+version = "0.1.2"
 description = "Local QLoRA adapter training pipeline for Ollama models on Apple Silicon"
 readme = "README.md"
 license = { text = "MIT" }

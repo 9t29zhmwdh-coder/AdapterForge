@@ -79,4 +79,4 @@ See [`docs/pipeline.example.json`](docs/pipeline.example.json) for the config fo
 
 ---
 
-**Author:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Early Release · v0.1.1 · **License:** MIT
+**Author:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Early Release · v0.1.2 · **License:** MIT

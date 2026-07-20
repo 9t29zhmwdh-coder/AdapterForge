@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning follows [Semantic Versioning](https://semver.org/).
 
+## [0.1.2] - 2026-07-20
+
+### Added
+
+- Build provenance attestation (`actions/attest-build-provenance`) for the SBOM attached to each release
+- Required status checks (`Lint, format, test, build`, `Security audit`) added to the `solo-main-protection` ruleset, CI must be green before a pull request can merge
+
 ## [0.1.1] - 2026-07-20
 
 ### Added
