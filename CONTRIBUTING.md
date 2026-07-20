@@ -23,6 +23,10 @@ pytest tests/ -v
 
 All three must pass; CI enforces the same checks on every pull request.
 
+## Test Policy
+
+A pull request that adds new functionality includes tests covering that functionality. A pull request that fixes a bug includes a regression test that fails without the fix and passes with it.
+
 ## Commit Style
 
 Semantic commit prefixes: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`.
