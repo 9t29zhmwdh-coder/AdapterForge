@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning follows [Semantic Versioning](https://semver.org/).
 
+## [0.1.5] - 2026-07-28
+
+### Changed
+
+- Bumped the remaining pinned actions: `actions/setup-python` to v7.0.0, `ossf/scorecard-action` to v2.4.4, `github/codeql-action/upload-sarif` to v4.37.3. Every SHA verified against its upstream tag, annotated tags dereferenced to the commit they point at.
+- The `setup-python` pin also had a bare `# v6` comment while bumping to v7.0.0; the comment now carries the full version, per `engineering-standards` v0.6.0 section 2.
+
+setup-python v7.0.0 removes the `pip-install` input. No workflow here used it, only `python-version`, so the major bump lands without further changes.
+
 ## [0.1.4] - 2026-07-28
 
 ### Changed
