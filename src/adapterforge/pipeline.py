@@ -3,11 +3,11 @@
 import json
 from pathlib import Path
 
+from . import dataset as dataset_module
 from .deploy import deploy_to_ollama
 from .export import export_to_gguf
 from .merge import merge_adapter
 from .train import run_training
-from . import dataset as dataset_module
 
 
 def _resolve_path(base_dir: Path, value: str) -> Path:

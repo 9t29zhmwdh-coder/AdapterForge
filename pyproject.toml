@@ -18,7 +18,11 @@ dependencies = [
 dev = [
     "pytest>=8",
     "pytest-cov>=5",
-    "ruff>=0.6",
+    # Pinned exactly: an open range lets a new ruff reformat the same
+    # unchanged source and turn CI red without a commit, which is what
+    # happened with 0.16.0's import ordering. Dependabot's pip ecosystem
+    # bumps this as a reviewable PR.
+    "ruff==0.16.0",
 ]
 
 [project.scripts]
