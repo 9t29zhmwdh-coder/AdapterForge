@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning follows [Semantic Versioning](https://semver.org/).
 
+## [0.1.4] - 2026-07-28
+
+### Changed
+
+- The release job attests the SBOM with `actions/attest` v4.2.0 instead of `actions/attest-build-provenance`, which is only a wrapper around it as of its v4. The job also gains the `artifact-metadata: write` permission that `actions/attest` requires, which would otherwise have surfaced as a failure at the next tag push.
+- `actions/checkout` is pinned to v7.0.1 across all three workflows. Every file sat on an older v7 SHA whose comment read only `# v7`, so the pin claimed less than it resolved to.
+
+Both follow `engineering-standards` v0.6.0, sections 2 and 9.
+
 ## [0.1.3] - 2026-07-20
 
 ### Changed
