@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning follows [Semantic Versioning](https://semver.org/).
 
+## [0.1.8] - 2026-07-31
+
+### Changed
+
+- Both READMEs now open with the reason to fine-tune locally at all, which is that the usual route uploads the very material that was the reason to keep things on your own machine. The five pipeline commands follow directly, and a short paragraph says who should not bother: if prompting or a few in-context examples already work, fine-tuning is the wrong tool.
+
+---
+
 ## [0.1.7] - 2026-07-29
 
 ### Security
