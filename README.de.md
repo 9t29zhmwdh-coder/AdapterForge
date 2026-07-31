@@ -5,9 +5,28 @@
 
 [🇬🇧 English Version](README.md)
 
-**Lokale QLoRA-Adapter-Trainings-Pipeline für Ollama-Modelle. Python, MLX.**
+**Bringt einem lokalen Modell dein eigenes Material bei, auf deinem eigenen Mac.**
 
-Trainiere ein lokales Modell auf deine eigenen Daten, ganz ohne Trainings-Cloud: Datensatz vorbereiten, QLoRA-Training auf Apple Silicon mit MLX, Ergebnis mergen und als GGUF exportieren, und bei Ollama registrieren, alles über ein CLI.
+Ein allgemeines Modell kennt deine Codebasis nicht, deine Produktsprache nicht,
+dein Fachgebiet nicht. Fine-Tuning ändert das, nur führt der übliche Weg über
+eine Trainings-Cloud, und damit lädst du genau das Material hoch, dessentwegen
+es lokal bleiben sollte. Hier läuft die ganze Kette stattdessen auf Apple
+Silicon.
+
+```
+adapterforge dataset        JSONL in train/valid/test aufteilen
+adapterforge train          QLoRA-Fine-Tuning über MLX
+adapterforge merge          Adapter ins Basismodell einschmelzen
+adapterforge export         nach GGUF konvertieren
+adapterforge deploy         an Ollama übergeben
+```
+
+`adapterforge pipeline config.json` fährt alle fünf Schritte der Reihe nach.
+
+**Nichts für dich, wenn** ein guter Prompt oder ein paar Beispiele im Kontext
+schon reichen. Fine-Tuning kostet Stunden und einen sauber kuratierten
+Datensatz und ist das falsche Mittel, wenn dem Modell nur gesagt werden muss,
+was es tun soll.
 
 [![CI](https://github.com/9t29zhmwdh-coder/AdapterForge/actions/workflows/ci.yml/badge.svg)](https://github.com/9t29zhmwdh-coder/AdapterForge/actions) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/9t29zhmwdh-coder/AdapterForge/badge)](https://securityscorecards.dev/viewer/?uri=github.com/9t29zhmwdh-coder/AdapterForge) [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13666/badge)](https://www.bestpractices.dev/projects/13666)
 
