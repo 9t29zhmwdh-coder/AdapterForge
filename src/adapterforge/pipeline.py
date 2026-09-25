@@ -39,7 +39,10 @@ def run_pipeline(config_path: Path) -> None:
 
     fused_dir = _resolve_path(base_dir, config["fused_dir"])
     merge_adapter(
-        model=config["model"], adapter_path=adapter_path, output_dir=fused_dir
+        model=config["model"],
+        adapter_path=adapter_path,
+        output_dir=fused_dir,
+        dequantize=True,
     )
 
     gguf_path = _resolve_path(base_dir, config["gguf_path"])
@@ -48,6 +51,11 @@ def run_pipeline(config_path: Path) -> None:
         output_gguf=gguf_path,
         llama_cpp_path=_resolve_path(base_dir, config["llama_cpp_path"]),
         outtype=config.get("outtype", "q8_0"),
+        llama_cpp_python=(
+            _resolve_path(base_dir, config["llama_cpp_python"])
+            if config.get("llama_cpp_python")
+            else None
+        ),
     )
 
     deploy_to_ollama(

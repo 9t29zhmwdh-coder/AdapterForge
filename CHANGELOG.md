@@ -2,6 +2,27 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning follows [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-09-25
+
+The pipeline had never run from start to finish. A test run with a small Qwen model now goes through all five stages and the deployed model answers with what it was trained on.
+
+### Added
+
+- `merge --dequantize` writes full-precision weights. llama.cpp cannot read MLX 4-bit models, so the GGUF export needs this; the pipeline sets it on its own.
+- `export --llama-cpp-python` names the interpreter for llama.cpp's converter. By default `<llama.cpp>/.venv` is used when it exists, because llama.cpp pins transformers 4.x while mlx-lm needs 5.x.
+- The export refuses to run with numpy below 2.3 on Python 3.14. That combination silently drops the signs in the q8_0 quantizer, and the resulting model loads in Ollama but answers with gibberish.
+
+### Fixed
+
+- Every MLX stage called a bare `python`, which does not exist on a stock Mac or outside an activated environment. They now use the interpreter AdapterForge runs in, and a missing tool is reported as a stage error instead of a traceback.
+- The merge failed with "cached snapshot is incomplete" because training downloads only part of the model. All stages now share one complete local snapshot.
+- `mlx_lm.fuse` rewrites the tokenizer in a format llama.cpp's converter cannot read and drops the chat template. The merge restores the base model's own tokenizer files.
+- The Modelfile pointed at the GGUF with a relative path, which Ollama resolves against the Modelfile's folder. It is now absolute.
+- The READMEs promised that a model from the Ollama cache could serve as a base model. MLX trains on Hugging Face safetensors, Ollama stores GGUF; the claim is gone. The quick start now sets up both environments and names the pipeline's `--config` flag correctly.
+- The version was out of step: `pyproject.toml` said 0.1.8 and `adapterforge.__version__` 0.1.2. Both now say 0.2.0.
+
+---
+
 ## [0.1.9] - 2026-08-04
 
 ### Fixed

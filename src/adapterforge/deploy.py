@@ -8,7 +8,9 @@ from .shell import run
 def write_modelfile(
     gguf_path: Path, modelfile_path: Path, system_prompt: str | None = None
 ) -> None:
-    lines = [f"FROM {gguf_path}"]
+    # Ollama resolves a relative FROM against the Modelfile's directory, not
+    # the working directory, so the path is written absolute.
+    lines = [f"FROM {gguf_path.resolve()}"]
     if system_prompt:
         lines.append(f'SYSTEM """{system_prompt}"""')
     modelfile_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
