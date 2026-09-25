@@ -11,7 +11,8 @@ raw JSONL --> dataset.py --> mlx_lm.lora (train.py) --> mlx_lm.fuse (merge.py)
 ```
 
 - **`dataset.py`**: pure Python, no subprocesses. Reads a raw JSONL file, normalizes each record into the chat `messages` format `mlx_lm.lora` expects, and writes `train.jsonl`/`valid.jsonl`/`test.jsonl` splits.
-- **`train.py`**, **`merge.py`**, **`export.py`**, **`deploy.py`**: each wraps exactly one external command (`python -m mlx_lm.lora`, `python -m mlx_lm.fuse`, a llama.cpp conversion script, `ollama create`) via the shared `shell.run()` helper, which raises `StageError` on a non-zero exit code instead of failing silently.
+- **`train.py`**, **`merge.py`**, **`export.py`**, **`deploy.py`**: each wraps exactly one external command (`mlx_lm.lora`, `mlx_lm.fuse`, a llama.cpp conversion script, `ollama create`) via the shared `shell.run()` helper, which raises `StageError` on a non-zero exit code or a missing executable instead of failing silently. The MLX stages run under the interpreter AdapterForge itself runs in (`sys.executable`), so they work without an activated environment. The llama.cpp script runs in its own environment, because its pinned transformers 4.x cannot coexist with mlx-lm's 5.x.
+- **`models.py`**: resolves a Hugging Face model id to one complete local snapshot that every stage shares, since `mlx_lm.fuse` works offline and fails on the partial snapshot training leaves behind.
 - **`pipeline.py`**: reads one JSON config and calls the stage modules above in sequence, resolving every path in the config relative to the config file's own directory.
 - **`cli.py`**: `argparse`-based entry point, one subcommand per stage plus `pipeline`.
 

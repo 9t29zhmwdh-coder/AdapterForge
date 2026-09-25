@@ -63,10 +63,12 @@ If you don't have `git`, macOS will offer to install the Xcode Command Line Tool
 ### 5. Install AdapterForge
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -e .
 ```
 
-This installs the `adapterforge` command into your terminal.
+This installs the `adapterforge` command into a private environment inside the AdapterForge folder. In a new terminal window, run `source .venv/bin/activate` again from that folder before using `adapterforge`.
 
 ### 6. Prepare your training data
 
@@ -80,7 +82,7 @@ adapterforge dataset --input raw.jsonl --output data/
 
 ### 7. Fine-tune a base model
 
-Pick a base model already sitting in your Ollama or Hugging Face cache, for example:
+Pick an MLX base model from Hugging Face. It is downloaded on first use (a 7B 4-bit model is about 4 GB) and reused afterwards. Models you pulled with Ollama cannot be used here, since Ollama stores them in a format MLX cannot train on. For example:
 
 ```bash
 adapterforge train --model mlx-community/Qwen2.5-7B-Instruct-4bit \
@@ -93,15 +95,27 @@ This step can take a while depending on your dataset size and Mac.
 
 ```bash
 adapterforge merge --model mlx-community/Qwen2.5-7B-Instruct-4bit \
-  --adapter-path adapters/ --output fused/
+  --adapter-path adapters/ --output fused/ --dequantize
 ```
+
+`--dequantize` stores the merged model at full precision. The next step needs that, because llama.cpp cannot read the compressed 4-bit format.
 
 ### 9. Export to GGUF and deploy to Ollama
 
-This step needs a local [llama.cpp](https://github.com/ggml-org/llama.cpp) checkout, which is not installed automatically:
+This step needs a local [llama.cpp](https://github.com/ggml-org/llama.cpp) checkout with its own Python environment, which is not installed automatically. Set it up once:
 
 ```bash
-git clone https://github.com/ggml-org/llama.cpp.git ../llama.cpp
+git clone --depth 1 https://github.com/ggml-org/llama.cpp.git ../llama.cpp
+python3 -m venv ../llama.cpp/.venv
+../llama.cpp/.venv/bin/pip install -r ../llama.cpp/requirements/requirements-convert_hf_to_gguf.txt
+../llama.cpp/.venv/bin/pip install "numpy>=2.3"
+```
+
+The last line matters on Python 3.14: older numpy produces a model that loads but only answers gibberish. AdapterForge checks this and stops with a hint if it is missing.
+
+Then convert and deploy:
+
+```bash
 
 adapterforge export --model-dir fused/ --output model.gguf \
   --llama-cpp-path ../llama.cpp

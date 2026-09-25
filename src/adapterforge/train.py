@@ -2,7 +2,8 @@
 
 from pathlib import Path
 
-from .shell import run
+from .models import local_model_path
+from .shell import PYTHON, run
 
 
 def run_training(
@@ -16,11 +17,11 @@ def run_training(
 ) -> None:
     adapter_path.mkdir(parents=True, exist_ok=True)
     command = [
-        "python",
+        PYTHON,
         "-m",
         "mlx_lm.lora",
         "--model",
-        model,
+        local_model_path(model),
         "--train",
         "--data",
         str(data_dir),

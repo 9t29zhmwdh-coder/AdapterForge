@@ -21,7 +21,7 @@ adapterforge export         nach GGUF konvertieren
 adapterforge deploy         an Ollama übergeben
 ```
 
-`adapterforge pipeline config.json` fährt alle fünf Schritte der Reihe nach.
+`adapterforge pipeline --config config.json` fährt alle fünf Schritte der Reihe nach.
 
 **Nichts für dich, wenn** ein guter Prompt oder ein paar Beispiele im Kontext
 schon reichen. Fine-Tuning kostet Stunden und einen sauber kuratierten
@@ -39,7 +39,7 @@ was es tun soll.
 
 **Build from source, kein Installer:** ein Python-CLI, das du mit `pip install -e .` installierst und im Terminal aufrufst, kein Hintergrunddienst, kein eigener Daemon.
 
-In der Praxis zeigst du auf ein Basismodell, das schon in deinem Ollama- oder Hugging-Face-Cache liegt, und auf eine JSONL-Datei mit Beispielen, und am Ende steht ein neuer Tag in `ollama list`, der sich wie deine Daten verhält und direkt mit `ollama run` läuft.
+In der Praxis zeigst du auf ein MLX-Basismodell von Hugging Face (beim ersten Mal heruntergeladen, danach aus dem Cache) und auf eine JSONL-Datei mit Beispielen, und am Ende steht ein neuer Tag in `ollama list`, der sich wie deine Daten verhält und direkt mit `ollama run` läuft.
 
 ## Funktionen
 
@@ -55,13 +55,16 @@ In der Praxis zeigst du auf ein Basismodell, das schon in deinem Ollama- oder Hu
 - macOS auf Apple Silicon (M-Serie)
 - Python 3.10+
 - [Ollama](https://ollama.com) lokal installiert und am Laufen
-- Ein lokaler [llama.cpp](https://github.com/ggml-org/llama.cpp)-Checkout, nur für den `export`-Schritt nötig (nicht mitgeliefert, keine pip-Abhängigkeit)
+- Ein lokaler [llama.cpp](https://github.com/ggml-org/llama.cpp)-Checkout mit eigener Python-Umgebung, nur für den `export`-Schritt nötig (nicht mitgeliefert, keine pip-Abhängigkeit). Sein Konverter pinnt transformers 4.x, mlx-lm braucht 5.x, deshalb teilen sich die beiden keine Umgebung. AdapterForge nimmt `<llama.cpp>/.venv` automatisch.
+
+Ollamas eigener Modellspeicher taugt nicht als Basismodell: Er enthält GGUF-Dateien, MLX trainiert auf Hugging-Face-Safetensors.
 
 ## Schnellstart
 
 ```bash
 git clone https://github.com/9t29zhmwdh-coder/AdapterForge.git
 cd AdapterForge
+python3 -m venv .venv && source .venv/bin/activate
 pip install -e .
 
 # 1. rohe JSONL-Beispiele in Train/Valid/Test-Splits umwandeln
@@ -71,11 +74,16 @@ adapterforge dataset --input raw.jsonl --output data/
 adapterforge train --model mlx-community/Qwen2.5-7B-Instruct-4bit \
   --data data/ --adapter-path adapters/
 
-# 3. Adapter ins Basismodell einbacken
+# 3. Adapter einbacken; --dequantize schreibt volle Gewichte, die llama.cpp
+#    braucht, weil es MLX-4-Bit-Modelle nicht lesen kann
 adapterforge merge --model mlx-community/Qwen2.5-7B-Instruct-4bit \
-  --adapter-path adapters/ --output fused/
+  --adapter-path adapters/ --output fused/ --dequantize
 
-# 4. nach GGUF konvertieren (braucht einen lokalen llama.cpp-Checkout)
+# 4. nach GGUF konvertieren, einmalig: llama.cpp in eigener Umgebung einrichten
+git clone --depth 1 https://github.com/ggml-org/llama.cpp.git ../llama.cpp
+python3 -m venv ../llama.cpp/.venv
+../llama.cpp/.venv/bin/pip install -r ../llama.cpp/requirements/requirements-convert_hf_to_gguf.txt
+../llama.cpp/.venv/bin/pip install "numpy>=2.3"   # siehe Hinweis unten
 adapterforge export --model-dir fused/ --output model.gguf \
   --llama-cpp-path ../llama.cpp
 
@@ -90,7 +98,9 @@ Oder alle fünf Schritte aus einer Config:
 adapterforge pipeline --config pipeline.json
 ```
 
-Das Config-Format zeigt [`docs/pipeline.example.json`](docs/pipeline.example.json).
+Das Config-Format zeigt [`docs/pipeline.example.json`](docs/pipeline.example.json). Die Pipeline dequantisiert beim Merge von selbst.
+
+`q8_0` (Standard für `--outtype`) hält die Datei etwa halb so gross wie `f16`. Unter Python 3.14 verfälscht numpy unter 2.3 diese Quantisierung still: Das GGUF lädt, das Modell antwortet aber nur Kauderwelsch. Der Export prüft die Konverter-Umgebung und bricht mit der Lösung ab, statt so eine Datei zu schreiben.
 
 ## Deinstallation / Aufräumen
 

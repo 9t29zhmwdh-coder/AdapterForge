@@ -43,6 +43,11 @@ def _add_merge_command(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--model", required=True)
     parser.add_argument("--adapter-path", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument(
+        "--dequantize",
+        action="store_true",
+        help="write full-precision weights; needed before a GGUF export of a 4-bit base",
+    )
 
 
 def _add_export_command(subparsers: argparse._SubParsersAction) -> None:
@@ -53,6 +58,12 @@ def _add_export_command(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--llama-cpp-path", required=True, type=Path)
     parser.add_argument("--outtype", default="q8_0")
+    parser.add_argument(
+        "--llama-cpp-python",
+        type=Path,
+        default=None,
+        help="interpreter with llama.cpp's requirements (default: <llama-cpp-path>/.venv)",
+    )
 
 
 def _add_deploy_command(subparsers: argparse._SubParsersAction) -> None:
@@ -108,7 +119,10 @@ def _dispatch(args: argparse.Namespace) -> None:
         )
     elif args.command == "merge":
         merge_adapter(
-            model=args.model, adapter_path=args.adapter_path, output_dir=args.output
+            model=args.model,
+            adapter_path=args.adapter_path,
+            output_dir=args.output,
+            dequantize=args.dequantize,
         )
     elif args.command == "export":
         export_to_gguf(
@@ -116,6 +130,7 @@ def _dispatch(args: argparse.Namespace) -> None:
             output_gguf=args.output,
             llama_cpp_path=args.llama_cpp_path,
             outtype=args.outtype,
+            llama_cpp_python=args.llama_cpp_python,
         )
     elif args.command == "deploy":
         deploy_to_ollama(
