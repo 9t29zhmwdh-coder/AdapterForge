@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning follows [Semantic Versioning](https://semver.org/).
 
+## [0.2.1] - 2026-09-27
+
+### Changed
+
+Dependency and CI updates merged since v0.2.0, each with green checks:
+
+- chore(ci): bump the actions group across 1 directory with 5 updates (#26)
+- chore(deps): bump ruff from 0.16.0 to 0.16.1 in the python group (#24)
+
+---
+
 ## [0.2.0] - 2026-09-25
 
 The pipeline had never run from start to finish. A test run with a small Qwen model now goes through all five stages and the deployed model answers with what it was trained on.

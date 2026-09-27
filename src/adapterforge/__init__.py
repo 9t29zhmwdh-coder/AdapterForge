@@ -1,3 +1,3 @@
 """AdapterForge: local QLoRA adapter training pipeline for Ollama models on Apple Silicon."""
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
