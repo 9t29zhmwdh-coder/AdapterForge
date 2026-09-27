@@ -23,8 +23,20 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
-      - name: Install package and dev deps
-        run: pip install -e ".[dev]"
+      # Every package comes from requirements/ci.txt with its hash checked;
+      # AdapterForge itself is installed without resolving anything further.
+      - name: Install pinned dependencies and tools
+        run: |
+          pip install --require-hashes -r requirements/ci.txt
+          pip install --no-deps --no-build-isolation -e .
+      - name: Lock files match pyproject.toml
+        run: |
+          cp requirements/ci.txt fresh-ci.txt
+          uv pip compile pyproject.toml requirements/tools.in --extra dev --universal --python-version 3.10 --generate-hashes -q --custom-compile-command "uv pip compile pyproject.toml requirements/tools.in --extra dev --universal --python-version 3.10 --generate-hashes -o requirements/ci.txt" -o fresh-ci.txt
+          diff requirements/ci.txt fresh-ci.txt
+          cp requirements/runtime.txt fresh-runtime.txt
+          uv pip compile pyproject.toml --universal --python-version 3.10 --generate-hashes -q --custom-compile-command "uv pip compile pyproject.toml --universal --python-version 3.10 --generate-hashes -o requirements/runtime.txt" -o fresh-runtime.txt
+          diff requirements/runtime.txt fresh-runtime.txt
       - name: Lint
         run: ruff check --output-format=github .
       - name: Format check
@@ -32,9 +44,7 @@ jobs:
       - name: Test
         run: pytest tests/ -v --cov=src --cov-report=term-missing
       - name: Build wheel and sdist
-        run: |
-          pip install build==1.5.0
-          python -m build
+        run: python -m build --no-isolation
 
   security-scan:
     name: Security audit
@@ -44,12 +54,14 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
-      - name: Install package
-        run: pip install -e .
-      - name: pip-audit
+      # Every package comes from requirements/ci.txt with its hash checked;
+      # AdapterForge itself is installed without resolving anything further.
+      - name: Install pinned dependencies and tools
         run: |
-          pip install pip-audit==2.10.1
-          pip-audit --skip-editable
+          pip install --require-hashes -r requirements/ci.txt
+          pip install --no-deps --no-build-isolation -e .
+      - name: pip-audit
+        run: pip-audit --skip-editable
 
   sbom:
     name: Generate SBOM
@@ -60,12 +72,12 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
-      - name: Install package
-        run: pip install -e .
+      - name: Install pinned tools
+        run: pip install --require-hashes -r requirements/ci.txt
+      # The SBOM lists what AdapterForge needs at runtime, from the hashed
+      # runtime lock, rather than everything the CI environment holds.
       - name: Generate SBOM
-        run: |
-          pip install cyclonedx-bom==7.3.0
-          cyclonedx-py environment -o bom.json
+        run: cyclonedx-py requirements --pyproject pyproject.toml -o bom.json requirements/runtime.txt
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: sbom
