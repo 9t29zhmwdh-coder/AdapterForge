@@ -6,7 +6,7 @@ All notable changes to this project are documented here. Format based on [Keep a
 
 ### Security
 
-- Every package the CI and the release build install now comes from `requirements/ci.txt` with its hash checked (`pip install --require-hashes`). Before, the workflows took whatever version the package index served at that moment, which OpenSSF Scorecard marks down under pinned dependencies. The project itself is installed with `--no-deps`, and wheels are built with `--no-isolation` so the build backend is the pinned one rather than a fresh download.
+- Every package the CI and the release build install now comes from `requirements/ci.txt` with its hash checked (`pip install --require-hashes`). Before, the workflows took whatever version the package index served at that moment, which OpenSSF Scorecard marks down under pinned dependencies. The project itself is installed with `--no-deps --no-build-isolation`, and wheels are built with `--no-isolation` so the build backend is the pinned one rather than a fresh download.
 - CI checks that `requirements/ci.txt` still matches `pyproject.toml`, starting from the committed pins, so a changed dependency cannot slip past the lock. Dependabot keeps the pins current.
 - The SBOM now comes from `requirements/runtime.txt`, the hashed lock of what AdapterForge needs at runtime. Before, `cyclonedx-py environment` described the CI environment, so the SBOM also listed cyclonedx-bom and its own dependencies as if AdapterForge shipped them.
 
