@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning follows [Semantic Versioning](https://semver.org/).
 
+## [0.2.3] - 2026-09-30
+
+### Changed
+
+Dependency and CI updates merged since v0.2.2, each with green checks:
+
+- chore(deps): bump ruff from 0.16.1 to 0.16.8 in the python group (#30)
+
+---
+
 ## [0.2.2] - 2026-09-27
 
 ### Security
