@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning follows [Semantic Versioning](https://semver.org/).
 
+## [0.2.4] - 2026-10-11
+
+### Fixed
+
+- The OpenSSF Scorecard badge in the README showed a broken image on GitHub. The Scorecard API answers with a redirect to shields.io, which GitHub's image proxy does not follow reliably. The badge now points at shields.io directly.
+
+---
+
 ## [0.2.3] - 2026-09-30
 
 ### Changed
