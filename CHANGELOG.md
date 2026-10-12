@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here. Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning follows [Semantic Versioning](https://semver.org/).
 
+## [0.2.6] - 2026-10-12
+
+### Changed
+
+Dependency and CI updates merged since v0.2.5, each with green checks:
+
+- chore(ci): bump the actions group with 5 updates (#36)
+- chore(deps): bump the python group across 1 directory with 20 updates (#37)
+
+---
+
 ## [0.2.5] - 2026-10-11
 
 ### Fixed
